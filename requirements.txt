@@ -12,14 +12,11 @@ pandas
 pillow
 pip
 pyflakes
-pytorch_lightning
 regex
 scikit-image
 seaborn
 tensorflow
 tokenizers
-torch
-torchvision
 tqdm
 transformers
 typing_extensions

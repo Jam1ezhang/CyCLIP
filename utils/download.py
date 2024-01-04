@@ -84,13 +84,13 @@ def run(options):
     df = df[options.start:options.end]
     
     df = multiprocess(df, function = download, dir = options.dir, hash = options.hash)    
-    df.to_csv(f"{options.dir}/train.csv", index = False)
+    df.to_csv(f"{options.dir}/val.csv", index = False)
 
 if(__name__ == "__main__"):
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-f,--file", dest = "file", type = str, default = None, help = "File")
-    parser.add_argument("-d,--dir", dest = "dir", type = str, default = None, help = "Directory")
+    parser.add_argument("-f,--file", dest = "file", type = str, default = "/home/user/data/zym/codespace/CyCLIP/data/cc3m/Validation_GCC-1.1.0-Validation.tsv", help = "File")
+    parser.add_argument("-d,--dir", dest = "dir", type = str, default = "/home/user/data/zym/codespace/CyCLIP/data/cc3m", help = "Directory")
     parser.add_argument("-s,--start", dest = "start", type = int, default = 0, help = "Start index")
     parser.add_argument("-e,--end", dest = "end", type = int, default = 1000000000000, help = "End index")
 

@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 import torch.backends.cudnn as cudnn
 from torch.cuda.amp import GradScaler
 from torch.nn.parallel import DistributedDataParallel as DDP
-
+sys.path.append("/home/user/data/zym/codespace/ListwiseRank-Contrastive-Loss_exp/")
 from pkgs.openai.clip import load as load_model
 
 from .train import train
@@ -83,7 +83,21 @@ def worker(rank, options, logger):
 
     start_epoch = 0
     if(options.checkpoint is not None):
-        if(os.path.isfile(options.checkpoint)):
+        if os.path.basename(options.checkpoint).endswith('.ckpt'):
+            checkpoint = torch.load(options.checkpoint, map_location = options.device)
+            start_epoch = checkpoint["epoch"]
+            state_dict = checkpoint['state_dict']
+            mod_state_dict = {}
+            for k, v in state_dict.items():
+                new_k = k[6:]
+                mod_state_dict[new_k] = v
+            state_dict = mod_state_dict
+            if(not options.distributed and next(iter(state_dict.items()))[0].startswith("module")):
+                state_dict = {key[len("module."):]: value for key, value in state_dict.items()}
+            model.load_state_dict(state_dict)
+            if(optimizer is not None): optimizer.load_state_dict(checkpoint["optimizer"])
+            logging.info(f"Loaded checkpoint '{options.checkpoint}' (start epoch {checkpoint['epoch']})")
+        elif (os.path.isfile(options.checkpoint)):
             checkpoint = torch.load(options.checkpoint, map_location = options.device)
             start_epoch = checkpoint["epoch"]
             state_dict = checkpoint["state_dict"]
