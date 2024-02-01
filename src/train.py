@@ -77,9 +77,7 @@ def get_loss(umodel, outputs, criterion, options):
         ) / 2
         # compute total loss
         cyclic_loss = (
-            contrastive_loss
-            + 0.25 * crossmodal_rank_loss / batch_size
-            + 0.25 * inmodal_rank_loss / batch_size
+            0.25 * crossmodal_rank_loss / batch_size + 0.25 * inmodal_rank_loss / batch_size
         )
         loss = contrastive_loss+cyclic_loss
     else:
